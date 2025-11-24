@@ -1,4 +1,4 @@
-﻿using Calulator;
+﻿using CalculatorLibrary;
 using System.Text.RegularExpressions;
 
 class Program
@@ -6,17 +6,66 @@ class Program
     static void Main(string[] args)
     {
         bool endApp = false;
+        int calculationCount = 0;
+        List<(string, double)> previousCalculationsList = new List<(string, double)>();
         // Display title as the C# console calculator app.
         Console.WriteLine("Console Calculator in C#\r");
         Console.WriteLine("------------------------\n");
-
+        Calculator calculator = new Calculator();
         while (!endApp)
         {
             // Declare variables and set to empty.
             // Use Nullable types (with ?) to match type of System.Console.ReadLine
+            previousCalculationsList = calculator.GetCalculations();
             string? numInput1 = "";
             string? numInput2 = "";
             double result = 0;
+            
+            Console.WriteLine("Welcome to the Calculator! To begin calculating, please type 'C'\nOr to view previous calculations, please type 'H'");
+            string? userInput = Console.ReadLine();
+            if (userInput != null)
+            {
+                if(userInput.ToUpper() == "H")
+                {
+                    Console.WriteLine("Previous Calculations:");
+                    if(previousCalculationsList.Count == 0)
+                    {
+                        Console.WriteLine("No previous calculations found.");
+                    }
+                    else
+                    {
+                        bool _useFirstColour = true;
+                        foreach (var calculation in previousCalculationsList)
+                        {
+                            ConsoleColor colourA = ConsoleColor.Cyan;
+                            ConsoleColor colourB = ConsoleColor.Yellow;
+                            Console.ForegroundColor = _useFirstColour ? colourA : colourB;
+                            _useFirstColour = !_useFirstColour;
+                            Console.WriteLine($"{calculation.Item1} {calculation.Item2}");
+                        }
+                        Console.ResetColor();
+                    }
+                    Console.WriteLine("------------------------\n");
+                    Console.WriteLine("If you would like to clear this history, please type ");
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.Write("'Delete'");
+                    Console.ResetColor();
+                    Console.WriteLine("Otherwise, please type 'C' to continue to calculations.");
+                    userInput = Console.ReadLine();
+                    if(userInput != null && userInput.ToUpper() == "DELETE")
+                    {
+                        calculator.ClearCalculations();
+                        Console.WriteLine("Calculation history cleared.");
+                    }
+                    continue;
+                }
+                else if(userInput.ToUpper() != "C")
+                {
+                    Console.WriteLine("Error: Unrecognized input.");
+                    Console.WriteLine("------------------------\n");
+                    continue;
+                }
+            }
 
             // Ask the user to type the first number.
             Console.Write("Type a number, and then press Enter: ");
@@ -59,12 +108,20 @@ class Program
             {
                 try
                 {
-                    result = Calculator.DoOperation(cleanNum1, cleanNum2, op);
+                    result = calculator.DoOperation(cleanNum1, cleanNum2, op);
                     if (double.IsNaN(result))
                     {
                         Console.WriteLine("This operation will result in a mathematical error.\n");
                     }
-                    else Console.WriteLine("Your result: {0:0.##}\n", result);
+                    else
+                    {
+                        calculationCount++;
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine(" Result # {0}:", calculationCount);
+                        Console.ResetColor();
+                        Console.WriteLine("\t{0:0.##}\n", result);
+                    }
+                    
                 }
                 catch (Exception e)
                 {
@@ -79,6 +136,7 @@ class Program
 
             Console.WriteLine("\n"); // Friendly linespacing.
         }
+        calculator.Finish();
         return;
     }
 }
