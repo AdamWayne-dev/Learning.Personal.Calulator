@@ -20,15 +20,15 @@ class Program
             string? numInput1 = "";
             string? numInput2 = "";
             double result = 0;
-            
+
             Console.WriteLine("Welcome to the Calculator! To begin calculating, please type 'C'\nOr to view previous calculations, please type 'H'");
             string? userInput = Console.ReadLine();
             if (userInput != null)
             {
-                if(userInput.ToUpper() == "H")
+                if (userInput.ToUpper() == "H")
                 {
                     Console.WriteLine("Previous Calculations:");
-                    if(previousCalculationsList.Count == 0)
+                    if (previousCalculationsList.Count == 0)
                     {
                         Console.WriteLine("No previous calculations found.");
                     }
@@ -52,14 +52,14 @@ class Program
                     Console.ResetColor();
                     Console.WriteLine("Otherwise, please type 'C' to continue to calculations.");
                     userInput = Console.ReadLine();
-                    if(userInput != null && userInput.ToUpper() == "DELETE")
+                    if (userInput != null && userInput.ToUpper() == "DELETE")
                     {
                         calculator.ClearCalculations();
                         Console.WriteLine("Calculation history cleared.");
                     }
                     continue;
                 }
-                else if(userInput.ToUpper() != "C")
+                else if (userInput.ToUpper() != "C")
                 {
                     Console.WriteLine("Error: Unrecognized input.");
                     Console.WriteLine("------------------------\n");
@@ -68,9 +68,13 @@ class Program
             }
 
             // Ask the user to type the first number.
-            Console.Write("Type a number, and then press Enter: ");
+            Console.Write("Type a number, and then press Enter:\nAlternatively, if you'd like to use a previous result - please type");
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.Write(" 'M'");
+            Console.WriteLine();
+            Console.ResetColor();
             numInput1 = Console.ReadLine();
-
+            numInput1 = UseHistoricResult(previousCalculationsList, numInput1);
             double cleanNum1 = 0;
             while (!double.TryParse(numInput1, out cleanNum1))
             {
@@ -79,8 +83,13 @@ class Program
             }
 
             // Ask the user to type the second number.
-            Console.Write("Type another number, and then press Enter: ");
+            Console.Write("Type another number, and then press Enter:\nAlternatively, if you'd like to use a previous result - please type");
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.Write(" 'M'");
+            Console.WriteLine();
+            Console.ResetColor();
             numInput2 = Console.ReadLine();
+            numInput2 = UseHistoricResult(previousCalculationsList, numInput2);
 
             double cleanNum2 = 0;
             while (!double.TryParse(numInput2, out cleanNum2))
@@ -121,7 +130,7 @@ class Program
                         Console.ResetColor();
                         Console.WriteLine("\t{0:0.##}\n", result);
                     }
-                    
+
                 }
                 catch (Exception e)
                 {
@@ -138,5 +147,35 @@ class Program
         }
         calculator.Finish();
         return;
+    }
+
+    private static string? UseHistoricResult(List<(string, double)> previousCalculationsList, string? numInput1)
+    {
+        if (numInput1 != null && numInput1.ToUpper() == "M")
+        {
+            if (previousCalculationsList.Count == 0)
+            {
+                Console.WriteLine("No previous calculations found. Please enter a numeric value.");
+                numInput1 = Console.ReadLine();
+            }
+            else
+            {
+                Console.WriteLine("Please select which previous result to use by typing the corresponding number:");
+                for (int i = 0; i < previousCalculationsList.Count; i++)
+                {
+                    Console.WriteLine($"{i + 1}: {previousCalculationsList[i].Item1} = {previousCalculationsList[i].Item2}");
+                }
+                string? playerInput = Console.ReadLine();
+                int selectedIndex = -1;
+                while (!int.TryParse(playerInput, out selectedIndex) || selectedIndex < 1 || selectedIndex > previousCalculationsList.Count)
+                {
+                    Console.Write("This is not valid input. Please enter a valid number corresponding to a previous result: ");
+                    playerInput = Console.ReadLine();
+                }
+                numInput1 = previousCalculationsList[selectedIndex - 1].Item2.ToString();
+            }
+        }
+
+        return numInput1;
     }
 }
