@@ -21,7 +21,17 @@ class Program
             string? numInput2 = "";
             double result = 0;
 
-            Console.WriteLine("Welcome to the Calculator! To begin calculating, please type 'C'\nOr to view previous calculations, please type 'H'");
+            Console.Write("Welcome to the Calculator! Please type the one of the following commands:\nTo start calculating type: ");
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.Write("C");
+            Console.ResetColor();
+            Console.WriteLine(); 
+            Console.Write("Previous calculations, type: ");
+
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.Write("H");
+            Console.WriteLine();
+            Console.ResetColor();
             string? userInput = Console.ReadLine();
             if (userInput != null)
             {
@@ -35,10 +45,10 @@ class Program
                     else
                     {
                         bool _useFirstColour = true;
-                        foreach (var calculation in previousCalculationsList)
+                        foreach (var calculation in previousCalculationsList) // Displays the previous calculations with alternating colours
                         {
-                            ConsoleColor colourA = ConsoleColor.Cyan;
-                            ConsoleColor colourB = ConsoleColor.Yellow;
+                            ConsoleColor colourA = ConsoleColor.Blue;
+                            ConsoleColor colourB = ConsoleColor.DarkYellow;
                             Console.ForegroundColor = _useFirstColour ? colourA : colourB;
                             _useFirstColour = !_useFirstColour;
                             Console.WriteLine($"{calculation.Item1} {calculation.Item2}");
@@ -46,11 +56,14 @@ class Program
                         Console.ResetColor();
                     }
                     Console.WriteLine("------------------------\n");
-                    Console.WriteLine("If you would like to clear this history, please type ");
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.Write("'Delete'");
+                    Console.Write("If you would like to clear this history, type: ");
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                    Console.Write("Delete\n");
                     Console.ResetColor();
-                    Console.WriteLine("Otherwise, please type 'C' to continue to calculations.");
+                    Console.Write("Otherwise, to continue with calculations - type: ");
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    Console.Write("C");
+                    Console.ResetColor();
                     userInput = Console.ReadLine();
                     if (userInput != null && userInput.ToUpper() == "DELETE")
                     {
@@ -68,9 +81,13 @@ class Program
             }
 
             // Ask the user to type the first number.
-            Console.Write("Type a number, and then press Enter:\nAlternatively, if you'd like to use a previous result - please type");
-            Console.ForegroundColor = ConsoleColor.Magenta;
-            Console.Write(" 'M'");
+            Console.Write("Type a number, and then press:");
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.Write(" Enter");
+            Console.ResetColor();
+            Console.Write("\nAlternatively, if you'd like to use a previous result - type: ");
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.Write("M");
             Console.WriteLine();
             Console.ResetColor();
             numInput1 = Console.ReadLine();
@@ -83,9 +100,13 @@ class Program
             }
 
             // Ask the user to type the second number.
-            Console.Write("Type another number, and then press Enter:\nAlternatively, if you'd like to use a previous result - please type");
-            Console.ForegroundColor = ConsoleColor.Magenta;
-            Console.Write(" 'M'");
+            Console.Write("Type another number, and then press: ");
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.Write("Enter");
+            Console.ResetColor();
+            Console.Write("\nAlternatively, if you'd like to use a previous result - please type: ");
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.Write("M");
             Console.WriteLine();
             Console.ResetColor();
             numInput2 = Console.ReadLine();
@@ -99,17 +120,29 @@ class Program
             }
 
             // Ask the user to choose an operator.
-            Console.WriteLine("Choose an operator from the following list:");
-            Console.WriteLine("\ta - Add");
-            Console.WriteLine("\ts - Subtract");
-            Console.WriteLine("\tm - Multiply");
-            Console.WriteLine("\td - Divide");
-            Console.Write("Your option? ");
+            void WriteOption(string command, string description)
+            {
+                Console.ForegroundColor = ConsoleColor.Blue;
+                Console.Write($"\t{command}");
+                Console.ResetColor();
+                Console.WriteLine($"- {description}");
+            }
+            WriteOption("a ", "Add");
+            WriteOption("s ", "Subtract");
+            WriteOption("m ", "Multiply");
+            WriteOption("d ", "Divide");
+            WriteOption("p ", "Power function");
+            WriteOption("10x ", "10 to the power of");
+            WriteOption("sq ", "Square root (only uses the first number)");
+            WriteOption("sin ", "Sine angle (only uses the first number)");
+            WriteOption("cos ", "Cosine angle (only uses the first number)");
+            WriteOption("tan ", "Tangent angle (only uses the first number)");
 
+            Console.WriteLine("\nYour option?\n ");
             string? op = Console.ReadLine();
 
             // Validate input is not null, and matches the pattern
-            if (op == null || !Regex.IsMatch(op, "[a|s|m|d]"))
+            if (op == null || !Regex.IsMatch(op, "[a|s|m|d|p|sq|10x|sin|cos|tan]"))
             {
                 Console.WriteLine("Error: Unrecognized input.");
             }
@@ -140,7 +173,8 @@ class Program
             Console.WriteLine("------------------------\n");
 
             // Wait for the user to respond before closing.
-            Console.Write("Press 'n' and Enter to close the app, or press any other key and Enter to continue: ");
+            WriteOption("n ", "Quit the app");
+            WriteOption("Enter ", "Continue");
             if (Console.ReadLine() == "n") endApp = true;
 
             Console.WriteLine("\n"); // Friendly linespacing.
@@ -160,10 +194,13 @@ class Program
             }
             else
             {
-                Console.WriteLine("Please select which previous result to use by typing the corresponding number:");
+                Console.WriteLine("Please select which previous result to use by typing the corresponding index:");
                 for (int i = 0; i < previousCalculationsList.Count; i++)
                 {
-                    Console.WriteLine($"{i + 1}: {previousCalculationsList[i].Item1} = {previousCalculationsList[i].Item2}");
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                    Console.Write($"{i + 1} ");
+                    Console.ResetColor();
+                    Console.Write($": {previousCalculationsList[i].Item1} {previousCalculationsList[i].Item2}");
                 }
                 string? playerInput = Console.ReadLine();
                 int selectedIndex = -1;

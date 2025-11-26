@@ -56,6 +56,36 @@ namespace CalculatorLibrary
                     }
                     writer.WriteValue("Divide");
                     break;
+                case "sq":
+                    result = Math.Sqrt(num1);
+                    writer.WriteValue("Square Root");
+                    LogCalculation($"Sqrt({num1}) = ", result);
+                    break;
+                case "10x":
+                    result = Math.Pow(10, num1);
+                    writer.WriteValue("Ten to the Power of");
+                    LogCalculation($"10 ^ {num1} = ", result);
+                    break;
+                case "p":
+                    result = Math.Pow(num1, num2);
+                    writer.WriteValue("Power");
+                    LogCalculation($"{num1} ^ {num2} = ", result);
+                    break;
+                case "sin":
+                    result = Math.Sin(num1);
+                    writer.WriteValue("Sine");
+                    LogCalculation($"Sin({num1}) = ", result);
+                    break;
+                case "cos":
+                    result = Math.Cos(num1);
+                    writer.WriteValue("Cosine");
+                    LogCalculation($"Cos({num1}) = ", result);
+                    break;
+                case "tan":
+                    result = Math.Tan(num1);
+                    writer.WriteValue("Tangent");
+                    LogCalculation($"Tan({num1}) = ", result);
+                    break;
                 // Return text for an incorrect option entry.
                 default:
                     break;
