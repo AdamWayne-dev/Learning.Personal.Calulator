@@ -177,7 +177,7 @@ class Program
             WriteOption("Enter ", "Continue");
             if (Console.ReadLine() == "n") endApp = true;
 
-            Console.WriteLine("\n"); // Friendly linespacing.
+            Console.WriteLine("\n");
         }
         calculator.Finish();
         return;
